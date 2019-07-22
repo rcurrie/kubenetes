@@ -10,13 +10,15 @@ spec:
     command: ["sleep"]
     args: ["infinity"]
     env:
-      - name: AWS_PROFILE
-        value: "prp"
       - name: AWS_S3_ENDPOINT
-        value: "https://s3.nautilus.optiputer.net"
+        value: "http://rook-ceph-rgw-rooks3.rook"
     volumeMounts:
-      - mountPath: /root/.aws
-        name: credentials
+      - name: "prp-s3-credentials"
+        mountPath: "/root/.aws/credentials"
+        subPath: "credentials"
+      - name: "prp-s3-credentials"
+        mountPath: "/root/.s3cfg"
+        subPath: ".s3cfg"
     resources:
       requests:
         cpu: "1"
@@ -26,6 +28,6 @@ spec:
         memory: "2Gi"
   restartPolicy: Never
   volumes:
-    - name: credentials
+    - name: prp-s3-credentials
       secret:
-        secretName: $USER-aws-credentials
+        secretName: prp-s3-credentials
